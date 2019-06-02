@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.crm.dao.UsersMapper">
+ <!-- 角色表，用户表，角色用户 客户 客户  咨询师  咨询师签到表 关联表  -->
+	<resultMap type="Users" id="resultUserMap"><!-- id:自定义，type:实体类 -->
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	<association property="roles" javaType="roles"><!-- association：表连接， -->
+		<id property="rs_Id" column="rs_Id" />
+		<result property="rs_Name" column="rs_Name"/>
+		<result property="rs_Ext1" column="rs_Ext1"/>
+		<result property="rs_Ext2" column="rs_Ext2"/>
+	</association>
+	<association property="userRoles" javaType="userRoles"> 
+	<!-- property:字段,column:别名 -->
+		<id property="urs_Id" column="urs_Id" />
+		<result property="urs_UserId" column="urs_UserId"/>
+		<result property="urs_RoleId" column="Urs_RoleId"/>
+		<result property="urs_Ext1" column="urs_Ext1"/>
+		<result property="urs_Ext2" column="urs_Ext2"/>
+	</association>
+	<association property="clients" javaType="clients"> 
+		<id property="Cs_Id" column="Cs_Id" />
+	</association>
+	<association property="consultant" javaType="consultant"> 
+		<id property="C_Id" column="C_Id" />
+		<result property="C_UserId" column="C_UserId"/>
+		<result property="C_Weight" column="C_Weight"/>
+		<result property="C_Remark" column="C_Remark"/>
+		<result property="C_Ext1" column="C_Ext1"/>
+		<result property="C_Ext2" column="C_Ext2"/>
+	</association>
+	<association property="consultantLabels" javaType="consultantLabels"> 
+		<id property="Rls_Id" column="Rls_Id" />
+		<result property="Rls_ConsultantId" column="Rls_ConsultantId"/>
+		<result property="Rls_State" column="Rls_State"/>
+		<result property="Rls_StartTime" column="Rls_StartTime"/>
+		<result property="Rls_FinishTime" column="Rls_FinishTime"/>
+		<result property="Cur_Remark" column="Cur_Remark"/>
+		<result property="Cur_Ext1" column="Cur_Ext1"/>
+		<result property="Cur_Ext2" column="Cur_Ext2"/>
+	</association>
+	</resultMap>
+ 	<sql id="sqlWhere">
+		<where>
+ 			<if test="users.us_LoginName !=null and  users.us_LoginName  !=''">
+ 				and Us_LoginName like "%"#{users.us_LoginName}"%"
+ 			</if>
+ 			<if test="minTime !=null and minTime  !=''">
+ 				and Us_CreateTime &gt;=#{minTime}
+ 			</if>
+ 			<if test="maxTime !=null and maxTime  !=''">
+ 				and Us_CreateTime &lt;=#{maxTime}
+ 			</if>
+ 			<if test="users.us_IsLockout !=null and users.us_IsLockout  !=''">
+ 				and Us_IsLockout=#{users.us_IsLockout}
+ 			</if>
+ 		</where>
+	</sql>  
+ 	<update id="updateUsers" parameterType="users">
+		update users 
+		<set>
+			<if test="us_LastLoginTime !=null and us_LastLoginTime !=''">
+				Us_LastLoginTime=#{us_LastLoginTime},
+			</if>
+			<if test="us_PsdWrongNum !=null and us_PsdWrongNum !=''">
+				Us_PsdWrongNum=#{us_PsdWrongNum},
+			</if>
+		</set>
+		<where>
+			<if test="us_Id !=null and us_Id !=''">
+				Us_Id=#{us_Id}
+			</if>
+		</where>
+	</update>
+	<update id="updateUsersSuoDing" parameterType="users">
+		update users 
+		<set>
+			<if test="us_IsLockout !=null and us_IsLockout !=''">
+				Us_IsLockout=#{us_IsLockout},
+			</if>
+			<if test="us_LockTime !=null and us_LockTime !=''">
+				Us_LockTime=#{us_LockTime},
+			</if>
+		</set>
+		<where>
+			<if test="us_Id !=null and us_Id !=''">
+				Us_Id=#{us_Id}
+			</if>
+		</where>
+	</update>
+	<select id="selectUsersLogin" parameterType="Users" resultType="Users">
+		select * from users 
+		where us_LoginName=#{us_LoginName}
+	</select>
+	<select id="selectUsersAll" parameterType="fenye" resultType="users">
+		select * from users 
+		
+		<include refid="sqlWhere"></include>
+		ORDER BY Us_CreateTime DESC
+		limit #{page},#{pageSize}
+	</select>
+	<select id="selectUsersCount" parameterType="fenye" resultType="int">
+		select count(1) from users 
+		<include refid="sqlWhere"></include>
+	</select>
+	<insert id="insertUsers" parameterType="users">
+		insert INTO users(Us_LoginName,Us_PassWord,us_UserImg,Us_ProtecEmail,Us_ProtecMtel,us_CreateTime)
+		values(#{us_LoginName},#{us_PassWord},#{us_UserImg},#{us_ProtecEmail},#{us_ProtecMtel},#{us_CreateTime})
+	</insert>
+	<select id="selectUsersByName" parameterType="String" resultType="int">
+		select count(1) from users
+ 		where Us_LoginName=#{usersName}
+	</select>
+	<select id="selectUsersByEmail" parameterType="String" resultType="int">
+		select count(1) from users
+		where us_ProtecEmail =#{usersEmail}
+	</select>
+	<select id="selectUsersByMtel" parameterType="String" resultType="int">
+		select count(1) from users
+ 		where us_ProtecMtel =#{usersMtel}
+	</select>
+	
+	
+	<delete id="deleteusers" parameterType="int">
+		delete from users 
+		where Us_Id=#{usersId}
+	</delete>
+	<update id="updateUsersPwd" parameterType="users">
+		update users set 
+		us_PassWord=#{us_PassWord},us_LockTime=#{us_LockTime} 
+		where us_Id=#{us_Id}
+	</update>
+	<update id="updateUsersIsLockout" parameterType="users">
+		update users set 
+		us_IsLockout=#{us_IsLockout},us_LockTime=#{us_LockTime} 
+		where us_Id=#{us_Id}
+	</update>
+	<update id="updateUsersJieSuo" parameterType="users">
+		update users set 
+		us_IsLockout=#{us_IsLockout},us_LockTime=#{us_LockTime},us_PsdWrongNum=#{us_PsdWrongNum} 
+		where us_Id=#{us_Id}
+	</update>
+	<update id="updateUsersByNameEmailMtel" parameterType="users">
+		update users 
+		<set>
+			<if test="us_ProtecEmail !=null and us_ProtecEmail !=''">
+				Us_LastLoginTime=#{us_LastLoginTime},
+			</if>
+			<if test="us_ProtecEmail !=null and us_ProtecEmail !=''">
+				us_ProtecEmail=#{us_ProtecEmail},
+			</if>
+			<if test="us_ProtecMtel !=null and us_ProtecMtel !=''">
+				us_ProtecMtel=#{us_ProtecMtel},
+			</if>
+		</set>
+		<where>
+			<if test="us_LoginName !=null and us_LoginName !=''">
+				us_LoginName=#{us_LoginName}
+			</if>
+		</where>
+	</update>
+	<update id="updateUsersPassWord" parameterType="users">
+		update users set 
+		us_PassWord=#{us_PassWord}
+		where us_LoginName=#{us_LoginName}
+	</update>
+	 <!-- 签到 判断-->
+  <select id="UsersLoginState"  resultMap="resultUserMap"  parameterType="int">
+	SELECT  u.*,cs.*,rs.*,ur.*,r.* from users u  left JOIN (SELECT  C_Id,count(1) Cs_Id  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id inner JOIN userroles ur on
+ ur.Urs_UserId=u.Us_Id inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id LEFT JOIN Consultant c on c.C_UserId=u.Us_Id LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime,max(Cur_Ext1) Cur_Ext1, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_UserId  WHERE u.Us_Id=#{C_UserId}
+	</select>
+ </mapper>
+ 

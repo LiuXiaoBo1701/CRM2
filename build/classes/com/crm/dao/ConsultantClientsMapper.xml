@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.crm.dao.ConsultantClientsMapper">
+  <sql id="wel">
+  	<where>
+  							
+  				<if test="clients.C_Id >0">
+  					and c.c_Id=#{clients.C_Id}
+  				</if>
+  				<if test="clients.Cs_Name !=null and clients.Cs_Name !=''">
+  					and c.cs_Name like "%"#{clients.Cs_Name}"%" 
+  				</if>
+  				<if test="clients.Cs_IsHuiFang >-1">
+  					and c.cs_IsHuiFang=#{clients.Cs_IsHuiFang}
+  				</if>
+  				<if test="clients.Cs_IsJiaoFei >-1">
+  					and c.cs_IsJiaoFei=#{clients.Cs_IsJiaoFei}
+  				</if>
+  				<if test="minTime !=null and minTime !=''">
+  					and c.cs_VisitTime &gt;= #{minTime}
+  				</if>
+  				<if test="maxTime !=null and maxTime !=''">
+  					and c.cs_VisitTime &lt;= #{maxTime}
+  				</if> 				
+  			</where>
+  </sql>
+  		<select id="selectClientsByAll" parameterType="fenye" resultType="Clients">
+  			<!-- SELECT * FROM clients c -->
+  			SELECT c.* FROM clients c 
+  			<include refid="wel"/>
+  			ORDER BY c.Cs_Id DESC
+  			limit #{page},#{pageSize}	 
+  		</select>
+  		
+  		<select id="selectClientsCount" parameterType="fenye" resultType="int"> 			
+  			 SELECT count(c.cs_Id) FROM clients c 
+  			<include refid="wel"/>			 
+  		</select>
+  		
+  		<update id="updateClient" parameterType="clients">
+  			update clients
+  			<set> 				
+  				cs_Name=#{Cs_Name},cs_Img=#{Cs_Img},cs_Sex=#{Cs_Sex},cs_Age=#{Cs_Age},cs_Phone=#{Cs_Phone},cs_Xueli=#{Cs_Xueli},
+  				cs_Email=#{Cs_Email},cs_QQ=#{Cs_QQ},cs_WeiXin=#{Cs_WeiXin},cs_Source=#{Cs_Source},cs_ClientState=#{Cs_ClientState},
+  				cs_FenPei=#{Cs_FenPei},cs_SiteSheng=#{Cs_SiteSheng},cs_SiteShi=#{Cs_SiteShi},cs_SiteXian=#{Cs_SiteXian},cs_SiteXiangXi=#{Cs_SiteXiangXi},
+  				cs_IsJiaoFei=#{Cs_IsJiaoFei},cs_IsHuiFang=#{Cs_IsHuiFang},cs_IsValid=#{Cs_IsValid},cs_IsVisit=#{Cs_IsVisit},cs_IsBaoBei=#{Cs_IsBaoBei},
+  				cs_IsTuiFen=#{Cs_IsTuiFen},cs_TuiFenInfo=#{Cs_TuiFenInfo},cs_IsJinBan=#{Cs_IsJinBan},cs_HuiFangInfo=#{Cs_HuiFangInfo},cs_Courses=#{Cs_Courses},cs_Money=#{Cs_Money},
+  				cs_Grade=#{Cs_Grade},cs_IsValidInfo=#{Cs_IsValidInfo},cs_HuiFangTime=#{Cs_HuiFangTime},cs_VisitTime=#{Cs_VisitTime},cs_JiaoFeiTime=#{Cs_JiaoFeiTime},cs_FoundTime=#{Cs_FoundTime},
+  				cs_JinBanTime=#{Cs_JinBanTime},cs_ShenFenZheng=#{Cs_ShenFenZheng},cs_BirthTime=#{Cs_BirthTime},cs_ConsultantRemark=#{Cs_ConsultantRemark},cs_Remark=#{Cs_Remark}
+  			</set>
+  			where cs_Id=#{Cs_Id}
+  		</update>
+  		
+  		  		
+  		<insert id="insertClientUserRecord" parameterType="clientuserrecord">
+  			insert into clientuserrecord(cur_Title,cur_ClientId,cur_UserId,cur_ZhuangTai,cur_LianXiFangShi,cur_RecordTime,cur_Remark)
+  			 VALUES(#{Cur_Title},#{Cur_ClientId},#{Cur_UserId},#{Cur_ZhuangTai},#{Cur_LianXiFangShi},#{Cur_RecordTime},#{Cur_Remark})  			
+  		</insert>
+  </mapper>

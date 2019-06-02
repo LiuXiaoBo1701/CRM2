@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.crm.dao.MessageMapper">
+  	<select id="selectMessageWeiJieShouCount" parameterType="String" resultType="int">
+  		select count(1) 
+		from message 
+		where M_ReceiveName=#{usersName} and M_State=0
+  	</select>
+  	<insert id="insertMessage" parameterType="message">
+  		insert into 
+  		message(M_InitiateName,M_ReceiveName,M_Content,M_Time)
+  		values(#{M_InitiateName},#{M_ReceiveName},#{M_Content},#{M_Time})
+  	</insert>
+  	<sql id="wel">
+  		<where>
+  			<if test="message.M_ReceiveName !=null and message.M_ReceiveName!=''">
+  			and m.M_ReceiveName like #{message.M_ReceiveName}
+  			</if>
+  			<if test="message.M_InitiateName !=null and message.M_InitiateName!=''">
+  			and m.M_InitiateName like "%"#{message.M_InitiateName}"%"
+  			</if>
+  			<if test="message.M_State >-1">
+  			and m.M_State=#{message.M_State}
+  			</if>
+  		</where> 
+  	</sql>
+  	<select id="selectMessageByAll" parameterType="fenye" resultType="message">
+  		select m.* from message m 
+  		<include refid="wel"/>
+  		ORDER BY m.M_Time DESC
+  		limit #{page},#{pageSize}
+  	</select>
+  	<select id="selectMessageCount" parameterType="fenye" resultType="int">
+  	select count(1) from message m
+  		<include refid="wel"/>
+  	</select>
+  	
+  	<update id="updateMessageState" parameterType="String">
+  		update message
+  		<set>
+  			M_State=1
+  		</set>
+  		where M_ReceiveName=#{M_ReceiveName}
+  	</update>
+  	
+  </mapper>

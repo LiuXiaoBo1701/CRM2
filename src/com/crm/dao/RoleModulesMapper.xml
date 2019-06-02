@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.crm.dao.RoleModulesMapper">
+  	<select id="selectRoleModulesById" parameterType="RoleModules" resultType="RoleModules">
+  		select * from rolemodules
+  		where rms_RoleId=#{rolesId}
+  	</select>
+  	<select id="selectRoleModulesByRolesId" parameterType="int" resultType="int">
+  		select count(1) from rolemodules
+  		where rms_RoleId=#{rolesId}
+  	</select>
+  	<select id="selectRoleModulesByModulesId" parameterType="int" resultType="int">
+  		select count(1) from rolemodules
+  		where rms_ModuleId=#{modulesId}
+  	</select>
+  	<delete id="deleteRoleModulesById" parameterType="int">
+  		delete from rolemodules 
+  		where rms_RoleId=#{rolesId}
+  	</delete>
+  	<insert id="insertRoleModules" parameterType="RoleModules">
+  		insert into rolemodules(rms_RoleId,rms_ModuleId) 
+  		values(#{rms_RoleId},#{rms_ModuleId})
+  	</insert>
+  </mapper>

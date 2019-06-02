@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ConsultantlabelsMapper">
+ <!--  //根据用户id查询每月签到的信息 -->
+        <select id="SelectConsultantlabelsCount" resultType="int">
+        SELECT count(*) FROM consultantlabels WHERE Rls_StartTime BETWEEN (SELECT DATE_ADD(CURDATE(),INTERVAL- DAY(CURDATE())+1 DAY)) AND (SELECT LAST_DAY(CURDATE())) 
+        and Rls_ConsultantId=#{C_UserId}
+        </select>
+		<select id="SelectConsultantlabels" parameterType="Fenye" resultType="Consultantlabels">
+		SELECT * FROM consultantlabels WHERE Rls_StartTime BETWEEN (SELECT DATE_ADD(CURDATE(),INTERVAL- DAY(CURDATE())+1 DAY)) AND (SELECT LAST_DAY(CURDATE())) 
+        and Rls_ConsultantId=#{C_UserId}
+         limit #{page},#{pageSize}
+		</select>
+</mapper>

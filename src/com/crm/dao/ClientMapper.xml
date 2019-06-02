@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.crm.dao.ClientMapper">
+
+		  <resultMap type="clients" id="clients">
+		  	<id property="Cs_Id" column="Cs_Id"/>
+		<result property="Cs_Name" column="Cs_Name"/>
+		<result property="Cs_Img" column="Cs_Img"/>
+		<result property="Cs_Sex" column="Cs_Sex"/>
+		<result property="Cs_Age" column="Cs_Age"/>
+		<result property="Cs_Phone" column="Cs_Phone"/>
+		<result property="Cs_Xueli" column="Cs_Xueli"/>
+		<result property="Cs_Email" column="Cs_Email"/>
+		<result property="Cs_QQ" column="Cs_QQ"/>
+		<result property="Cs_WeiXin" column="Cs_WeiXin"/>
+		<result property="Cs_Source" column="Cs_Source"/>
+		<result property="Cs_ClientState" column="Cs_ClientState"/>
+		<result property="Cs_FenPei" column="Cs_FenPei"/>
+		<result property="Cs_SiteSheng" column="Cs_SiteSheng"/>
+		<result property="Cs_SiteShi" column="Cs_SiteShi"/>
+		<result property="Cs_SiteXian" column="Cs_SiteXian"/>
+		<result property="Cs_SiteXiangXi" column="Cs_SiteXiangXi"/>
+		<result property="Cs_IsJiaoFei" column="Cs_IsJiaoFei"/>
+		<result property="Cs_IsHuiFang" column="Cs_IsHuiFang"/>
+		<result property="Cs_IsValid" column="Cs_IsValid"/>
+		<result property="Cs_IsVisit" column="Cs_IsVisit"/>
+		<result property="Cs_IsBaoBei" column="Cs_IsBaoBei"/>
+		<result property="Cs_IsTuiFen" column="Cs_IsTuiFen"/>
+		<result property="Cs_TuiFenInfo" column="Cs_TuiFenInfo"/>
+		<result property="Cs_IsJinBan" column="Cs_IsJinBan"/>
+		<result property="Cs_HuiFangInfo" column="Cs_HuiFangInfo"/>
+		<result property="Cs_Courses" column="Cs_Courses"/>
+		<result property="Cs_Money" column="Cs_Money"/>
+		<result property="Cs_Grade" column="Cs_Grade"/>
+		<result property="Cs_IsValidInfo" column="Cs_IsValidInfo"/>
+		<result property="Cs_HuiFangTime" column="Cs_HuiFangTime"/>
+		<result property="Cs_VisitTime" column="Cs_VisitTime"/>
+		<result property="Cs_JiaoFeiTime" column="Cs_JiaoFeiTime"/>
+		<result property="Cs_FoundTime" column="Cs_FoundTime"/>
+		<result property="Cs_JinBanTime" column="Cs_JinBanTime"/>
+		<result property="Cs_ShenFenZheng" column="Cs_ShenFenZheng"/>
+		<result property="Cs_BirthTime" column="Cs_BirthTime"/>
+		<result property="Cs_ConsultantRemark" column="Cs_ConsultantRemark"/>
+		<result property="Cs_Remark" column="Cs_Remark"/>
+		<result property="C_Id" column="C_Id"/>
+		<result property="Cs_Weight" column="Cs_Weight"/>
+		<result property="Cs_Ext2" column="Cs_Ext2"/>
+		<result property="users.us_Id" column="us_Id"/>
+		<result property="users.us_LoginName" column="us_LoginName"/>
+			<result property="users.us_PassWord" column="us_PassWord"/>
+			<result property="users.us_UserImg" column="us_UserImg"/>
+			<result property="users.us_IsLockout" column="us_IsLockout"/>
+			<result property="users.us_LastLoginTime" column="us_LastLoginTime"/>
+			<result property="users.us_CreateTime" column="us_CreateTime"/>
+			<result property="users.us_PsdWrongNum" column="us_PsdWrongNum"/>
+			<result property="users.us_LockTime" column="us_LockTime"/>
+			<result property="users.us_ProtecEmail" column="us_ProtecEmail"/>
+			<result property="users.us_ProtecMtel" column="us_ProtecMtel"/>
+			<result property="users.us_Ext1" column="us_Ext1"/>
+			<result property="users.us_Ext2" column="us_Ext2"/>
+  	</resultMap>
+  	<!-- 分页查询数据 -->
+		<select id="selectClient" parameterType="fenye" resultMap="clients"> 
+				  SELECT  cs.* from clients cs   
+				 <where>
+				<if test="clients.Cs_Ext2 != null and clients.Cs_Ext2 != ''">
+				and Cs_Ext2= #{clients.Cs_Ext2}
+				</if>
+				<if test="clients.Cs_Name != null and clients.Cs_Name != ''">
+				and Cs_Name like "%"#{clients.Cs_Name}"%"
+				</if>
+				<if test="clients.C_Id != null and clients.C_Id != ''">
+				and C_Id = #{clients.C_Id}
+				</if>
+				<if test="clients.Cs_QQ != null and clients.Cs_QQ != ''">
+				and Cs_QQ like "%"#{clients.Cs_QQ}"%"
+				</if>
+				<if test="minTime !=null and minTime !=''">
+                <![CDATA[
+                and Cs_FoundTime >= #{minTime}
+                ]]>
+	            </if>
+	            <if test="maxTime !=null and maxTime !=''">
+	                <![CDATA[
+	                and Cs_FoundTime <= #{maxTime}
+	                ]]>
+	            </if>
+	            <if test="clients.Cs_Phone != null and  clients.Cs_Phone != ''">
+	            	and  Cs_Phone like #{clients.Cs_Phone}"%"
+	            </if>
+	          	<if test="clients.Cs_ClientState != null and clients.Cs_ClientState != ''"> 
+	          		and Cs_ClientState = #{clients.Cs_ClientState}
+	          	</if>
+			</where> 
+				ORDER BY  cs.Cs_FoundTime DESC
+				limit #{page},#{pageSize}
+		</select>
+		<!-- 查询总条数 -->
+		<select id="countClient" parameterType="fenye" resultType="int"> 
+				SELECT Count(1) from clients cs  
+				 <where>
+				<if test="clients.Cs_Ext2 != null and clients.Cs_Ext2 != ''">
+				and cs.Cs_Ext2= #{clients.Cs_Ext2}
+				</if>
+				<if test="clients.Cs_Name != null and clients.Cs_Name != ''">
+				and cs.Cs_Name like "%"#{clients.Cs_Name}"%"
+				</if>
+				<if test="clients.C_Id != null and clients.C_Id != ''">
+				and cs.C_Id = #{clients.C_Id}
+				</if>
+				<if test="clients.Cs_QQ != null and clients.Cs_QQ != ''">
+				and Cs_QQ like "%"#{clients.Cs_QQ}"%"
+				</if>
+				<if test="minTime !=null and minTime !=''">
+                <![CDATA[
+                and Cs_FoundTime >= #{minTime}
+                ]]>
+	            </if>
+	            <if test="maxTime !=null and maxTime !=''">
+	                <![CDATA[
+	                and Cs_FoundTime <= #{maxTime}
+	                ]]>
+	            </if>
+	            <if test="clients.Cs_Phone != null and  clients.Cs_Phone != ''">
+	            	and  Cs_Phone like #{clients.Cs_Phone}"%"
+	            </if>
+	          	<if test="clients.Cs_ClientState != null and clients.Cs_ClientState != ''"> 
+	          		and Cs_ClientState = #{clients.Cs_ClientState}
+	          	</if>
+			</where>
+		</select>
+		<!-- 咨询师 -->
+		<select id="seleceShi" resultType="users">
+			SELECT us.Us_LoginName,us.Us_Id FROM users us INNER JOIN roles rs JOIN userroles uls
+				ON us.Us_Id = uls.Urs_UserId and uls.Urs_RoleId = rs.Rs_Id 
+				AND rs.Rs_Id='3'
+		</select>
+		
+		 <delete  id="deleClient" parameterType="int">
+			delete FROM clients where Cs_Id = #{Cs_Id}
+		</delete>
+		<!-- 添加客户 -->
+		<insert id="innserClient" parameterType="clients">
+			insert into clients  (cs_Name,cs_Sex,cs_Age,cs_SiteXiangXi,cs_SiteSheng,cs_SiteShi,cs_SiteXian,cs_Img,cs_Phone,cs_Email,cs_QQ,cs_Source,cs_ClientState,cs_Remark,cs_FoundTime,cs_Ext2 )
+			values(#{Cs_Name},#{Cs_Sex},#{Cs_Age},#{cs_SiteXiangXi},#{cs_SiteSheng},#{cs_SiteShi},#{cs_SiteXian},#{Cs_Img},#{Cs_Phone},#{Cs_Email},#{Cs_QQ},#{Cs_Source},#{Cs_ClientState},#{Cs_Remark},#{Cs_FoundTime},#{Cs_Ext2})
+		</insert>
+		<!-- 修改客户中的咨询师 -->
+		<update id="fenpeizixinshi" parameterType="clients">
+			UPDATE   clients cs set cs.C_Id=#{C_Id} WHERE cs.Cs_Id = #{Cs_Id}
+		</update>
+
+		<select id="selectStuSourceUrl" resultType="map">
+			SELECT count(1) as value,Cs_Source as name 
+			from clients 
+			GROUP BY Cs_Source 
+			ORDER BY  Cs_Source
+		</select>
+</mapper>

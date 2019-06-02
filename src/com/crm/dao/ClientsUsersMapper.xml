@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crm.dao.ClientsUsersMapper">
+   <!-- 客户表，用户表，客户用户关联表  -->
+	<resultMap type="Clients" id="ClientsMap"><!-- id:自定义，type:实体类property:字段,column:别名 -->
+		<id property="Cs_Id" column="Cs_Id" />
+		<result property="Cs_Name" column="Cs_Name"/>
+		<result property="Cs_Img" column="Cs_Img"/>
+		<result property="Cs_Sex" column="Cs_Sex"/>
+		<result property="Cs_Age" column="Cs_Age"/>
+		<result property="Cs_Phone" column="Cs_Phone"/>
+		<result property="Cs_Xueli" column="Cs_Xueli"/>
+		<result property="Cs_Email" column="Cs_Email"/>
+		<result property="Cs_QQ" column="Cs_QQ"/>
+		<result property="Cs_WeiXin" column="Cs_WeiXin"/>
+		<result property="Cs_Source" column="Cs_Source"/>
+		<result property="Cs_ClientState" column="Cs_ClientState"/>
+		<result property="Cs_FenPei" column="Cs_FenPei"/>
+		<result property="Cs_SiteSheng" column="Cs_SiteSheng"/>
+		<result property="Cs_SiteShi" column="Cs_SiteShi"/>
+		<result property="Cs_SiteXian" column="Cs_SiteXian"/>
+		<result property="Cs_SiteXiangXi" column="Cs_SiteXiangXi"/>
+		<result property="Cs_IsJiaoFei" column="Cs_IsJiaoFei"/>
+		<result property="Cs_IsHuiFang" column="Cs_IsHuiFang"/>
+		<result property="Cs_IsValid" column="Cs_IsValid"/>
+		<result property="Cs_IsVisit" column="Cs_IsVisit"/>
+		<result property="Cs_IsBaoBei" column="Cs_IsBaoBei"/>
+		<result property="Cs_IsTuiFen" column="Cs_IsTuiFen"/>
+		<result property="Cs_TuiFenInfo" column="Cs_TuiFenInfo"/>
+		<result property="Cs_IsJinBan" column="Cs_IsJinBan"/>
+		<result property="Cs_HuiFangInfo" column="Cs_HuiFangInfo"/>
+		<result property="Cs_Courses" column="Cs_Courses"/>
+		<result property="Cs_Money" column="Cs_Money"/>
+		<result property="Cs_Grade" column="Cs_Grade"/>
+		<result property="Cs_IsValidInfo" column="Cs_IsValidInfo"/>
+		<result property="Cs_HuiFangTime" column="Cs_HuiFangTime"/>
+		<result property="Cs_VisitTime" column="Cs_VisitTime"/>
+		<result property="Cs_JiaoFeiTime" column="Cs_JiaoFeiTime"/>
+		<result property="Cs_FoundTime" column="Cs_FoundTime"/>
+		<result property="Cs_JinBanTime" column="Cs_JinBanTime"/>
+		<result property="Cs_ShenFenZheng" column="Cs_ShenFenZheng"/>
+		<result property="Cs_BirthTime" column="Cs_BirthTime"/>
+		<result property="Cs_ConsultantRemark" column="Cs_ConsultantRemark"/>
+		<result property="Cs_Remark" column="Cs_Remark"/>
+		<result property="C_Id" column="C_Id"/>
+		<result property="Cs_Weight" column="Cs_Weight"/>
+	
+	
+	<association property="clientUserRecord" javaType="clientUserRecord"><!-- association：表连接， -->
+	
+		<id property="Cur_Id" column="Cur_Id" />
+		<result property="Cur_Title" column="Cur_Title"/>
+		<result property="Cur_ClientId" column="Cur_ClientId"/>
+		<result property="Cur_UserId" column="Cur_UserId"/>
+		<result property="Cur_ZhuangTai" column="Cur_ZhuangTai"/>
+		<result property="Cur_RecordTime" column="Cur_RecordTime"/>
+		<result property="Cur_Remark" column="Cur_Remark"/>
+		<result property="Cur_Ext1" column="Cur_Ext1"/>
+		<result property="Cur_Ext2" column="Cur_Ext2"/>
+	</association>
+	<association property="users" javaType="users"> 
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	</association>
+	</resultMap> 
+	<!-- 模糊查询条件 -->
+	<sql id="selectSql">
+		<where>
+ 			<if test="Cs_Name !=null and  Cs_Name  !=''">
+ 				and c.Cs_Name like "%"#{Cs_Name}"%"
+ 			</if>
+ 			<if test="Cs_Sex !=null and  Cs_Sex  !=''">
+ 				and c.Cs_Sex=#{Cs_Sex}
+ 			</if> 
+ 			<if test="Cs_Phone !=null and  Cs_Phone  !=''">
+ 				and c.Cs_Phone=#{Cs_Phone}
+ 			</if> 
+ 			<if test="Cs_ClientState !=null and  Cs_ClientState  !=''">
+ 				and c.Cs_ClientState=#{Cs_ClientState}
+ 			</if>
+ 			<if test="Cs_Source !=null and  Cs_Source  !=''">
+ 				and c.Cs_Source=#{Cs_Source}
+ 			</if>
+ 			<if test="Cs_SiteSheng !=null and  Cs_SiteSheng  !=''">
+ 				and c.Cs_SiteSheng=#{Cs_SiteSheng}
+ 			</if>
+ 			<if test="Cs_SiteShi !=null and  Cs_SiteShi  !=''">
+ 				and c.Cs_SiteShi=#{Cs_SiteShi}
+ 			</if>
+ 			<if test="Cs_FenPei !=null ">
+ 				and c.Cs_FenPei=#{Cs_FenPei}
+ 			</if>
+ 			<if test="Cs_SiteXian !=null and  Cs_SiteXian  !=''">
+ 				and c.Cs_SiteXian=#{Cs_SiteXian}
+ 			</if>
+ 			<if test="Cur_ZhuangTai !=null and  Cur_ZhuangTai  !=''">
+ 				and cl.Cur_ZhuangTai=#{Cur_ZhuangTai}
+ 			</if>
+ 			<if test="Us_Id !=null and  Us_Id  !=''">
+ 				and u.Us_Id=#{Us_Id}
+ 			</if>
+ 		</where>
+	</sql>   
+	<select id="SelectCountClientsUsers" parameterType="Fenye" resultType="int">   
+	 	    select   count(*)   from  clients c left JOIN  users u on c.C_Id=u.Us_Id
+	       <include refid="selectSql"></include>
+	</select>
+	<select id="SelectClientsUsers"  resultMap="ClientsMap"    parameterType="Fenye"> 
+		  select   c.*,u.*   from  clients c left JOIN  users u on c.C_Id=u.Us_Id
+	       <include refid="selectSql"></include>
+	       	ORDER BY c.Cs_FoundTime DESC  
+	       limit #{page},#{pageSize}
+	</select>
+<!-- 	//查询用户下的客户 -->
+	<select id="SelectCountUsersRolesClients" parameterType="Fenye" resultType="int">   
+	 	   select count(1)    from  clients c left JOIN  users u on c.C_Id=u.Us_Id left JOIN  clientuserrecord  cl on cl.Cur_ClientId=c.C_Id
+	       <include refid="selectSql"></include>
+	</select>
+	<select id="SelectUsersRolesClients"  resultMap="ClientsMap"    parameterType="Fenye"> 
+		   select   cl.*,c.*,u.*   from  clients c left JOIN  users u on c.C_Id=u.Us_Id left JOIN  clientuserrecord  cl on cl.Cur_ClientId=c.C_Id
+	       <include refid="selectSql"></include>
+	       limit #{page},#{pageSize}
+	</select>
+	<select id="SelectUsers"  resultType="Users">
+	 select * from  users
+	</select>
+	<!-- //导出 -->
+	<select id="SelectClientsUsersExport"  resultMap="ClientsMap"  parameterType="int">
+	 select   cl.*,c.*,u.*   from  clients c left JOIN  users u on c.C_Id=u.Us_Id left JOIN  clientuserrecord  cl on cl.Cur_ClientId=c.C_Id
+	 where c.Cs_Id=#{Cs_Id}
+	</select>
+	<!-- 角色表，用户表，角色用户 客户 客户  咨询师  咨询师签到表 关联表  -->
+	<resultMap type="Users" id="resultUserMap"><!-- id:自定义，type:实体类 -->
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	<association property="roles" javaType="roles"><!-- association：表连接， -->
+		<id property="rs_Id" column="rs_Id" />
+		<result property="rs_Name" column="rs_Name"/>
+		<result property="rs_Ext1" column="rs_Ext1"/>
+		<result property="rs_Ext2" column="rs_Ext2"/>
+	</association>
+	<association property="userRoles" javaType="userRoles"> 
+	<!-- property:字段,column:别名 -->
+		<id property="urs_Id" column="urs_Id" />
+		<result property="urs_UserId" column="urs_UserId"/>
+		<result property="urs_RoleId" column="Urs_RoleId"/>
+		<result property="urs_Ext1" column="urs_Ext1"/>
+		<result property="urs_Ext2" column="urs_Ext2"/>
+	</association>
+	<association property="clients" javaType="clients"> 
+		<id property="Cs_Id" column="Cs_Id" />
+		<id property="Cs_Ext1" column="Cs_Ext1" />
+	</association>
+	<association property="consultant" javaType="consultant"> 
+		<id property="C_Id" column="C_Id" />
+		<result property="C_UserId" column="C_UserId"/>
+		<result property="C_Weight" column="C_Weight"/>
+		<result property="C_Remark" column="C_Remark"/>
+		<result property="C_Ext1" column="C_Ext1"/>
+		<result property="C_Ext2" column="C_Ext2"/>
+	</association>
+	<association property="consultantLabels" javaType="consultantLabels"> 
+		<id property="Rls_Id" column="Rls_Id" />
+		<result property="Rls_ConsultantId" column="Rls_ConsultantId"/>
+		<result property="Rls_State" column="Rls_State"/>
+		<result property="Rls_StartTime" column="Rls_StartTime"/>
+		<result property="Rls_FinishTime" column="Rls_FinishTime"/>
+		<result property="Cur_Remark" column="Cur_Remark"/>
+		<result property="Cur_Ext1" column="Cur_Ext1"/>
+		<result property="Cur_Ext2" column="Cur_Ext2"/>
+	</association>
+	</resultMap>
+	<!-- 角色表，用户表，角色用户 客户 客户  咨询师  咨询师签到表 关联表  -->
+	<resultMap type="Users" id="yongyicimap"><!-- id:自定义，type:实体类 -->
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	<association property="roles" javaType="roles"><!-- association：表连接， -->
+		<id property="rs_Id" column="rs_Id" />
+		<result property="rs_Name" column="rs_Name"/>
+		<result property="rs_Ext1" column="rs_Ext1"/>
+		<result property="rs_Ext2" column="rs_Ext2"/>
+	</association>
+	<association property="userRoles" javaType="userRoles"> 
+	<!-- property:字段,column:别名 -->
+		<id property="urs_Id" column="urs_Id" />
+		<result property="urs_UserId" column="urs_UserId"/>
+		<result property="urs_RoleId" column="Urs_RoleId"/>
+		<result property="urs_Ext1" column="urs_Ext1"/>
+		<result property="urs_Ext2" column="urs_Ext2"/>
+	</association>
+	<association property="clients" javaType="clients"> 
+		<id property="Cs_Ext1" column="Cs_Ext1" />
+	</association>
+	<association property="consultant" javaType="consultant"> 
+		<id property="C_Id" column="C_Id" />
+		<result property="C_UserId" column="C_UserId"/>
+		<result property="C_Weight" column="C_Weight"/>
+		<result property="C_Remark" column="C_Remark"/>
+		<result property="C_Ext1" column="C_Ext1"/>
+		<result property="C_Ext2" column="C_Ext2"/>
+	</association>
+	<association property="consultantLabels" javaType="consultantLabels"> 
+		<id property="Rls_Id" column="Rls_Id" />
+		<result property="Rls_ConsultantId" column="Rls_ConsultantId"/>
+		<result property="Rls_State" column="Rls_State"/>
+		<result property="Rls_StartTime" column="Rls_StartTime"/>
+		<result property="Rls_FinishTime" column="Rls_FinishTime"/>
+		<result property="Cur_Remark" column="Cur_Remark"/>
+		<result property="Cur_Ext1" column="Cur_Ext1"/>
+		<result property="Cur_Ext2" column="Cur_Ext2"/>
+	</association>
+	</resultMap>
+	<select id="ZiXunSHiQianDaoFenLiangOption" resultMap="resultUserMap">
+		SELECT  * from users u  left JOIN (SELECT  C_Id,count(1) Cs_Id  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id inner JOIN userroles ur on
+    ur.Urs_UserId=u.Us_Id inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id LEFT JOIN Consultant c on c.C_UserId=u.Us_Id LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+    on cs.Rls_ConsultantId=c.C_UserId WHERE r.Rs_Name="咨询师" and cs.Rls_State=1
+	</select>
+	 <update id="UsersQianDaoFenLiang" parameterType="Clients" >
+       update clients  set C_Id=#{C_Id},Cs_FenPei=0  where Cs_Id=#{Cs_Id}  
+  </update>
+ 
+  <!-- 添加 -->
+	<insert id="innserClient" parameterType="clients">
+			insert into clients  (cs_Name,cs_Sex,cs_Age,cs_Phone,cs_Xueli,cs_Email,cs_QQ,cs_WeiXin,cs_Source,cs_ClientState,cs_FenPei,cs_SiteSheng,
+			cs_SiteShi,cs_SiteXian,cs_SiteXiangXi,cs_IsJiaoFei,cs_IsHuiFang,cs_IsValid,cs_IsVisit,cs_IsBaoBei,cs_IsTuiFen,cs_TuiFenInfo,cs_IsJinBan,
+			cs_HuiFangInfo,cs_Courses,cs_Money,cs_Grade,
+			cs_IsValidInfo,cs_HuiFangTime,cs_VisitTime,cs_JiaoFeiTime,cs_FoundTime,cs_JinBanTime,cs_ShenFenZheng,cs_BirthTime,cs_Remark,c_Id)
+			values(#{cs_Name},#{cs_Sex},#{cs_Age},#{cs_Phone},#{cs_Xueli},#{cs_Email},#{cs_QQ},#{cs_WeiXin},#{cs_Source},#{cs_ClientState},1,#{cs_SiteSheng},
+			#{cs_SiteShi},#{cs_SiteXian},#{cs_SiteXiangXi},#{cs_IsJiaoFei},#{cs_IsHuiFang},#{cs_IsValid},#{cs_IsVisit},#{cs_IsBaoBei},#{cs_IsTuiFen},#{cs_TuiFenInfo},
+			#{cs_IsJinBan},#{cs_HuiFangInfo},#{cs_Courses},#{cs_Money},#{cs_Grade},
+			#{cs_IsValidInfo},#{cs_HuiFangTime},#{cs_VisitTime},#{cs_JiaoFeiTime},now(),#{cs_JinBanTime},#{cs_ShenFenZheng},#{cs_BirthTime},#{cs_Remark},0)
+		</insert>
+	
+	
+	
+   <!-- //分量状态开启 -->
+	 <update id="ClientsUsersFenLiangZhuangTaiKaiQi" parameterType="Fenye" >
+       UPDATE consultantlabels  set Cur_Ext1=1 WHERE Rls_ConsultantId=#{C_UserId}
+  </update>	
+ <!--  //分量状态关闭 -->
+   <update id="ClientsUsersFenLiangZhuangTaiGuanBi" parameterType="Fenye" >
+       UPDATE consultantlabels  set Cur_Ext1=0 WHERE Rls_ConsultantId=#{C_UserId}
+  </update>	
+ <!--   //开启分量 查询相应的签到的咨询师 -->
+		
+		<select id="SelectQianDaoZiXuShiZiDongFenLiang"  resultMap="yongyicimap">
+SELECT u.Us_Id,u.Us_LoginName,IFNULL(rs.Cs_Ext1,0) Cs_Ext1,c.C_Weight,cs.Rls_State  FROM users u   inner JOIN  (SELECT  u.Us_Id,GROUP_CONCAT(r.Rs_Name) Rs_Name from users u  left JOIN 
+(SELECT  C_Id,count(1) Cs_Ext1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id 
+inner JOIN userroles ur on ur.Urs_UserId=u.Us_Id 
+inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id 
+LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id  GROUP BY u.Us_Id) ur ON u.Us_Id=ur.Us_Id left JOIN 
+(SELECT  C_Id,count(1) Cs_Ext1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id   LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime,max(Cur_Ext1) Cur_Ext1, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id WHERE ur.Rs_Name like "%咨询师%" and cs.Rls_State=1
+		</select>
+		
+		
+		<!--  //成交率图表 -->
+    
+    <select id="SelectTuBiaoLiuShiLv" resultType="Double">
+     SELECT ifnull(cast(Cs_IsJiaoFei*1.0/Cs_Id as decimal(10,1))*100,0) Cs_Ext1 
+FROM users u LEFT JOIN (SELECT  C_Id,count(1) Cs_Id,SUM(Cs_IsJiaoFei) Cs_IsJiaoFei FROM clients GROUP BY  C_Id) rs 
+on u.Us_Id=rs.C_Id WHERE u.Us_Id=#{Us_Id}
+    </select>
+       
+</mapper>

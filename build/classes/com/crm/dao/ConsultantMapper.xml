@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.crm.dao.ConsultantMapper">
+  	<insert id="insertConsultant" parameterType="Consultant">
+  		insert into consultant(C_UserId) 
+  		values(#{C_UserId})
+  	</insert>
+  	<delete id="deletConsultantById" parameterType="int">
+  		delete from consultant
+		where C_UserId=#{C_UserId}  		
+  	</delete>
+  </mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.crm.dao.RolesMapper">
+ 	<select id="selectRolesAll" resultType="Roles">
+ 		select * from roles
+ 	</select>
+ 	<select id="selectUserRolesById" parameterType="int" resultType="Roles">
+		select r.*
+		from roles r INNER JOIN users u INNER JOIN userroles ur 
+		on ur.Urs_RoleId=r.Rs_Id and ur.Urs_UserId=u.Us_Id
+		where u.Us_Id=#{usersId}
+	</select>
+	<delete id="deleteRoles" parameterType="int">
+		delete from roles 
+		where Rs_Id=#{rolesId}
+	</delete>
+	<insert id="insertRoles" parameterType="Roles">
+		insert into roles(rs_Name) 
+		values(#{rs_Name})
+	</insert>
+	<update id="updateRoles" parameterType="Roles">
+		update roles 
+		set rs_Name=#{rs_Name} 
+		where Rs_Id=#{rs_Id}
+	</update>
+	<select id="selectRolesByName" parameterType="String" resultType="int">
+		select count(1) from roles where rs_Name=#{RolesName} 
+	</select>
+	<select id="selectRolesById" parameterType="int" resultType="Roles">
+		select * from roles 
+		where Rs_Id=#{rolesId}
+	</select>
+ </mapper>

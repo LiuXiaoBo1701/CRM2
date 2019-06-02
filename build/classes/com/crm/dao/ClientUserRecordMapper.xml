@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.crm.dao.ClientUserRecordMapper">
+   <sql id="wel">
+  	<where>		
+               	 
+               	<if test="clientUserRecord.Cur_ClientId>0">
+               		c.Cur_ClientId=#{clientUserRecord.Cur_ClientId}
+               	</if>
+  				  <if test="clientUserRecord.Cur_UserId >0">
+  					and c.Cur_UserId = #{clientUserRecord.Cur_UserId}
+  				</if>		 				   				
+  				<if test="clientUserRecord.Cur_Title !=null and clientUserRecord.Cur_Title !=''">
+  					and c.Cur_Title like "%"#{clientUserRecord.Cur_Title}"%" 
+  				</if>
+  				<if test="clientUserRecord.Cur_ZhuangTai >-1">
+  					and c.Cur_ZhuangTai=#{clientUserRecord.Cur_ZhuangTai}
+  				</if>
+  				<if test="clientUserRecord.Cur_LianXiFangShi >-1">
+  					and c.Cur_LianXiFangShi=#{clientUserRecord.Cur_LianXiFangShi}
+  				</if>
+  				<if test="minTime !=null and minTime !=''">
+  					and c.Cur_RecordTime &gt;= #{minTime}
+  				</if>
+  				<if test="maxTime !=null and maxTime !=''">
+  					and c.Cur_RecordTime &lt;= #{maxTime}
+  				</if>   				
+  			</where>
+  </sql>
+  <resultMap type="clientUserRecord" id="curMap">
+  	<id property="Cur_Id" column="Cur_Id"/>
+  	<result property="Cur_Title" column="Cur_Title"/>
+  	<result property="Cur_ClientId" column="Cur_ClientId"/>
+  	<result property="Cur_UserId" column="Cur_UserId"/>
+  	<result property="Cur_ZhuangTai" column="Cur_ZhuangTai"/>
+  	<result property="Cur_LianXiFangShi" column="Cur_LianXiFangShi"/>
+  	<result property="Cur_RecordTime" column="Cur_RecordTime"/>
+  	<result property="Cur_Remark" column="Cur_Remark"/>
+  	<result property="Cur_Ext1" column="Cur_Ext1"/>
+  	<result property="Cur_Ext2" column="Cur_Ext2"/>
+  	
+
+  	<association property="users" javaType="users">
+  		<id column="us_Id" property="us_Id" />
+		<result column="us_LoginName" property="us_LoginName" />		
+  	</association>
+  	<association property="clients" javaType="clients">
+  		<id column="Cs_Id" property="Cs_Id" />
+		<result column="Cs_Name" property="Cs_Name" />
+  	</association>
+  </resultMap>
+ <!--  客户表，用户表，跟踪记录表 三表查询 -->
+  		<select id="selectClientUserRecordByAll" parameterType="fenye" resultMap="curMap">
+  			
+  			SELECT c.Cur_Id,c.Cur_Title,c.Cur_ClientId,c.Cur_ZhuangTai,cs.Cs_Name,c.Cur_UserId,u.Us_LoginName,c.Cur_LianXiFangShi,c.Cur_RecordTime,c.Cur_Remark FROM clientuserrecord c INNER JOIN clients cs ON c.Cur_ClientId=cs.Cs_Id
+ 			INNER JOIN users u ON c.Cur_UserId=u.Us_Id   
+  			<include refid="wel"/>
+  			ORDER BY c.Cur_RecordTime DESC
+  			limit #{page},#{pageSize}	 
+  		</select>
+  		<select id="selectClientUserRecordCount" parameterType="fenye" resultType="int"> 		
+  			 SELECT count(c.Cur_Id) FROM clientuserrecord c INNER JOIN clients cs ON c.Cur_ClientId=cs.Cs_Id
+ 			INNER JOIN users u ON c.Cur_UserId=u.Us_Id 
+  			<include refid="wel"/> 					 
+  		</select>
+  		<!-- 查询所有用户 -->
+  	<select id="selectUsers" resultType="users">
+  		SELECT Us_Id,Us_LoginName FROM users
+  	</select>	
+  		
+  </mapper>

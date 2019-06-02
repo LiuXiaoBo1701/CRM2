@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.crm.dao.UserRolesMapper">
+	<sql id="sqlWhere">
+		<where>
+ 			<if test="users.us_LoginName !=null and  users.us_LoginName  !=''">
+ 				and u.Us_LoginName=#{users.us_LoginName}
+ 			</if>
+ 			
+ 			<if test="users.us_PassWord !=null and users.us_PassWord  !=''">
+ 				and u.Us_PassWord=#{users.us_PassWord}
+ 			</if>
+ 		</where>
+	</sql>  
+	<!-- 角色表，用户表，角色用户关联表  -->
+	<resultMap type="UserRoles" id="resultUserRoles"><!-- id:自定义，type:实体类 -->
+		<!-- property:字段,column:别名 -->
+		<id property="urs_Id" column="urs_Id" />
+		<result property="urs_UserId" column="urs_UserId"/>
+		<result property="urs_RoleId" column="Urs_RoleId"/>
+		<result property="urs_Ext1" column="urs_Ext1"/>
+		<result property="urs_Ext2" column="urs_Ext2"/>
+	<association property="roles" javaType="roles"><!-- association：表连接， -->
+		<id property="rs_Id" column="rs_Id" />
+		<result property="rs_Name" column="rs_Name"/>
+		<result property="rs_Ext1" column="rs_Ext1"/>
+		<result property="rs_Ext2" column="rs_Ext2"/>
+	</association>
+	<association property="users" javaType="users"> 
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	</association>
+	</resultMap>
+	
+	<select id="selectUserRolesByName" parameterType="UserRoles"  resultMap="resultUserRoles">
+		select r.*,u.*,ur.*
+		from roles r INNER JOIN users u INNER JOIN userroles ur 
+		on ur.Urs_RoleId=r.Rs_Id and ur.Urs_UserId=u.Us_Id
+		<where>
+			<if test="users.us_LoginName !=null and users.us_LoginName !=''">
+				u.Us_LoginName=#{users.us_LoginName}
+			</if>
+		</where>
+	</select>
+ 	<insert id="insertUserRoles" parameterType="UserRoles">
+ 		INSERT INTO userroles(Urs_RoleId,Urs_UserId) 
+ 		VALUES(#{urs_RoleId},#{urs_UserId})
+ 	</insert>
+	<delete id="deleteUserRoles" parameterType="UserRoles">
+		delete from userroles 
+		where urs_RoleId=#{urs_RoleId} and urs_UserId=#{urs_UserId}
+	</delete>
+	<select id="selectUserRolesById" parameterType="int" resultType="int">
+		select count(1) 
+		from userroles
+		where urs_UserId=#{usersId}
+	</select>
+	
+	
+	
+	<!-- 角色表，用户表，角色用户 客户 客户  咨询师  咨询师签到表 关联表  -->
+	<resultMap type="Users" id="resultUserMap"><!-- id:自定义，type:实体类 -->
+		<id property="us_Id" column="us_Id" />
+		<result property="us_LoginName" column="us_LoginName"/>
+		<result property="us_PassWord" column="us_PassWord"/>
+		<result property="us_UserImg" column="us_UserImg"/>
+		<result property="us_IsLockout" column="us_IsLockout"/>
+		<result property="us_LastLoginTime" column="us_LastLoginTime"/>
+		<result property="us_CreateTime" column="us_CreateTime"/>
+		<result property="us_PsdWrongNum" column="us_PsdWrongNum"/>
+		<result property="us_LockTime" column="us_LockTime"/>
+		<result property="us_ProtecEmail" column="us_ProtecEmail"/>
+		<result property="us_ProtecMtel" column="us_ProtecMtel"/>
+		<result property="us_Ext1" column="us_Ext1"/>
+		<result property="us_Ext2" column="us_Ext2"/>
+	<association property="roles" javaType="roles"><!-- association：表连接， -->
+		<id property="rs_Id" column="rs_Id" />
+		<result property="rs_Name" column="rs_Name"/>
+		<result property="rs_Ext1" column="rs_Ext1"/>
+		<result property="rs_Ext2" column="rs_Ext2"/>
+	</association>
+	<association property="userRoles" javaType="userRoles"> 
+	<!-- property:字段,column:别名 -->
+		<id property="urs_Id" column="urs_Id" />
+		<result property="urs_UserId" column="urs_UserId"/>
+		<result property="urs_RoleId" column="Urs_RoleId"/>
+		<result property="urs_Ext1" column="urs_Ext1"/>
+		<result property="urs_Ext2" column="urs_Ext2"/>
+	</association>
+	<association property="clients" javaType="clients"> 
+		<id property="Cs_Id" column="Cs_Id" />
+	</association>
+	<association property="consultant" javaType="consultant"> 
+		<id property="C_Id" column="C_Id" />
+		<result property="C_UserId" column="C_UserId"/>
+		<result property="C_Weight" column="C_Weight"/>
+		<result property="C_Remark" column="C_Remark"/>
+		<result property="C_Ext1" column="C_Ext1"/>
+		<result property="C_Ext2" column="C_Ext2"/>
+	</association>
+	<association property="consultantLabels" javaType="consultantLabels"> 
+		<id property="Rls_Id" column="Rls_Id" />
+		<result property="Rls_ConsultantId" column="Rls_ConsultantId"/>
+		<result property="Rls_State" column="Rls_State"/>
+		<result property="Rls_StartTime" column="Rls_StartTime"/>
+		<result property="Rls_FinishTime" column="Rls_FinishTime"/>
+		<result property="Cur_Remark" column="Cur_Remark"/>
+		<result property="Cur_Ext1" column="Cur_Ext1"/>
+		<result property="Cur_Ext2" column="Cur_Ext2"/>
+	</association>
+	</resultMap>
+	
+	
+	<sql id="selectSql">
+		<where>
+ 			<if test="Us_LoginName !=null and  Us_LoginName  !=''">
+ 				and u.Us_LoginName like "%"#{Us_LoginName}"%"
+ 			</if>
+ 			<if test="Rs_Id !=null and  Rs_Id  !=''">
+ 				and r.Rs_Id=#{Rs_Id}
+ 			</if>
+ 			<if test="Us_IsLockout !=null ">
+ 				and u.Us_IsLockout=#{Us_IsLockout}
+ 			</if> 
+ 			<if test="Rls_State !=null ">
+ 				and cs.Rls_State  =#{Rls_State}
+ 			</if>
+ 			<if test="Us_ProtecMtel !=null and  Us_ProtecMtel  !=''">
+ 				and u.Us_ProtecMtel=#{Us_ProtecMtel}
+ 			</if> 
+ 			<if test="Us_CreateTimeMin !=null and  Us_CreateTimeMin  !=''">
+ 				and u.Us_CreateTime  &gt;=#{Us_CreateTimeMin}
+ 			</if>
+ 			<if test="Us_CreateTimeMax !=null and  Us_CreateTimeMax  !=''">
+ 				and u.Us_CreateTime  &lt;=#{Us_CreateTimeMax}
+ 			</if>
+ 			<if test="Rls_StartTimeMin !=null and  Rls_StartTimeMin  !=''">
+ 				and cs.Rls_StartTime  &gt;#{Rls_StartTimeMin}
+ 			</if>
+ 			<if test="Rls_StartTimeMax !=null and  Rls_StartTimeMax  !=''">
+ 				and cs.Rls_StartTime  &lt;#{Rls_StartTimeMax}
+ 			</if>
+ 			<if test="Rls_FinishTimeMin !=null and  Rls_FinishTimeMin  !=''">
+ 				and cs.Rls_FinishTime  &gt;#{Rls_FinishTimeMin}
+ 			</if>
+ 			<if test="Rls_FinishTimeMax !=null and  Rls_FinishTimeMax  !=''">
+ 				and cs.Rls_FinishTime  &lt;#{Rls_FinishTimeMax}
+ 			</if>
+ 			
+ 			
+ 		</where>
+	</sql>   
+	
+	
+	<!-- //查询总条数 -->
+	<select id="SelectCountUserRoles" parameterType="Fenye" resultType="int">   
+	
+SELECT count(*)  FROM users u   left JOIN  (SELECT  u.Us_Id,GROUP_CONCAT(r.Rs_Name) Rs_Name from users u  left JOIN 
+(SELECT  C_Id,count(1) Cs_Id1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id 
+inner JOIN userroles ur on ur.Urs_UserId=u.Us_Id 
+inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id 
+LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id  GROUP BY u.Us_Id) ur ON u.Us_Id=ur.Us_Id left JOIN 
+(SELECT  C_Id,count(1) Cs_Id1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id   LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime,max(Cur_Ext1) Cur_Ext1, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id
+
+		    <include refid="selectSql"></include>
+	       
+	</select>
+	<!-- //查询所有 -->
+	<select id="SelectUserRoles"  resultMap="resultUserMap"    parameterType="Fenye"> 
+		
+SELECT u.*,ur.*,c.*,cs.*,rs.*,IFNULL(rs.Cs_Id1,0) Cs_Id  FROM users u   left JOIN  (SELECT  u.Us_Id,GROUP_CONCAT(r.Rs_Name) Rs_Name from users u  left JOIN 
+(SELECT  C_Id,count(1) Cs_Id1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id 
+inner JOIN userroles ur on ur.Urs_UserId=u.Us_Id 
+inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id 
+LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id  GROUP BY u.Us_Id) ur ON u.Us_Id=ur.Us_Id left JOIN 
+(SELECT  C_Id,count(1) Cs_Id1  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id   LEFT JOIN Consultant c on c.C_UserId=u.Us_Id 
+LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime,max(Cur_Ext1) Cur_Ext1, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id
+
+		    <include refid="selectSql"></include>
+	       limit #{page},#{pageSize}
+	</select>
+	<select id="SelectRoles"  resultType="Roles">
+	 select * from  roles
+	</select>
+	<!-- 签到 -->
+<update id="ConsultantLabelsStart" parameterType="int" >
+	INSERT INTO  consultantlabels (Rls_ConsultantId,Rls_State,Rls_StartTime) values(#{C_UserId},1,now())
+     <!--   update ConsultantLabels set Rls_State=1,Rls_StartTime=now()  where Rls_ConsultantId=(select C_Id from Consultant where C_UserId=#{C_UserId}) -->
+  </update>
+   <!-- 签到 判断-->
+  <select id="UsersLoginState"  resultMap="resultUserMap"  parameterType="int">
+	SELECT  u.*,cs.*,rs.*,ur.*,r.* from users u  left JOIN (SELECT  C_Id,count(1) Cs_Id  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id inner JOIN userroles ur on
+ ur.Urs_UserId=u.Us_Id inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id LEFT JOIN Consultant c on c.C_UserId=u.Us_Id LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime,max(Cur_Ext1) Cur_Ext1, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_UserId  WHERE u.Us_Id=#{C_UserId}
+	</select>
+  <!-- 签退 -->
+  <update id="UsersQianTui" parameterType="int" >
+       update ConsultantLabels set Rls_State=0,Rls_FinishTime=now()  where Rls_ConsultantId=(select C_Id from Consultant where C_UserId=#{Us_Id}) and rls_state=1
+  </update>
+	<!-- //导出 -->
+	<select id="SelectUserRolesExport"  resultMap="resultUserMap"  parameterType="int">
+	SELECT  * from users u  left JOIN (SELECT  C_Id,count(1) Cs_Id  FROM clients GROUP BY  C_Id) rs on u.Us_Id=rs.C_Id inner JOIN userroles ur on
+ ur.Urs_UserId=u.Us_Id inner JOIN	 roles r on  ur.Urs_RoleId=r.Rs_Id LEFT JOIN Consultant c on c.C_UserId=u.Us_Id LEFT JOIN (SELECT  max(Rls_State) Rls_State,max(Rls_StartTime) Rls_StartTime,max(Rls_FinishTime) Rls_FinishTime, Rls_ConsultantId  FROM ConsultantLabels GROUP BY  Rls_ConsultantId)   cs 
+on cs.Rls_ConsultantId=c.C_Id
+ where u.Us_Id=#{Us_Id}
+	</select>	
+	<!-- 修改权重 -->
+	 <update id="updateQuanZhong" parameterType="Consultant" >
+       update consultant set C_Weight=#{c_Weight} where c_UserId=#{c_UserId}
+  </update>
+</mapper>
